@@ -48,6 +48,7 @@ const dto = (invoice: any) => {
     }
 }
 
+
 server.get('/invoices', async (request, reply) => {
 
     const {distributor, clientId, year} = request.query as Partial<{
@@ -78,6 +79,7 @@ server.get('/invoices', async (request, reply) => {
     reply.send(invoices.map(invoice => dto(invoice)));
 
 });
+
 
 server.get('/filters', async () => {
 
@@ -111,8 +113,9 @@ server.get('/filters', async () => {
         }
 
         return acc;
-    }, { consumers: [], distributors: [], years: [] });
+    }, {consumers: [], distributors: [], years: []});
 });
+
 
 server.post('/invoices', async (request, reply) => {
 
@@ -146,6 +149,44 @@ server.post('/invoices', async (request, reply) => {
 
     return dto(invoice);
 });
+
+
+server.get('/dashboard', async (request, reply) => {
+
+    const sum = await prisma.invoice.aggregate({
+        _sum: {
+            electricalQuantity: true,
+            sceeQuantity: true,
+            compensatedQuantity: true,
+            electricalValue: true,
+            sceeValue: true,
+            publicEnergyValue: true,
+            compensatedValue: true,
+        },
+    });
+
+    const {
+        electricalQuantity,
+        sceeQuantity,
+        compensatedQuantity,
+        electricalValue,
+        sceeValue,
+        publicEnergyValue,
+        compensatedValue
+    } = sum._sum as { [keu: string]: number };
+
+    reply.send({
+        energy: {
+            total: electricalQuantity + sceeQuantity,
+            compensated: compensatedQuantity,
+        },
+        financial: {
+            total: electricalValue + sceeValue + publicEnergyValue,
+            saving: compensatedValue,
+        },
+    });
+});
+
 
 server.listen({port: 8080}, (err, address) => {
     if (err) {

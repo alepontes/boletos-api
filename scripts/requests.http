@@ -42,3 +42,6 @@ Content-Type: application/json
     "value": 107.38
   }
 }
+
+### Dashboard
+GET {{API_HOST}}/dashboard
