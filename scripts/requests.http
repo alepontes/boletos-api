@@ -1,0 +1,44 @@
+### Listar
+GET {{API_HOST}}/invoices
+
+### Cadastrar
+POST {{API_HOST}}/invoices
+Content-Type: application/json
+
+{
+  "personal": {
+    "name": "Lorem Ipsum",
+    "clientId": "7204076116",
+    "meterId": "3001116735"
+  },
+  "general": {
+    "date": "JAN/2024",
+    "due": "12/02/2024",
+    "distributor": "CMIG",
+    "payment": 107.38
+  },
+  "electricalEnergy": {
+    "quantity": 50,
+    "priceUnit": 0.95543124,
+    "value": 47.75,
+    "tax": 0.74906000
+  },
+  "scee": {
+    "quantity": 456,
+    "priceUnit": 0.50970610,
+    "value": 232.42,
+    "tax": 0.48733000
+  },
+  "compensatedEnergy": {
+    "quantity": 456,
+    "priceUnit": 0.48733000,
+    "value": -222.22,
+    "tax": 0.48733000
+  },
+  "publicEnergy": {
+    "value": 49.43
+  },
+  "total": {
+    "value": 107.38
+  }
+}
