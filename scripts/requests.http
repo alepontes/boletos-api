@@ -1,5 +1,5 @@
 ### Listar
-GET {{API_HOST}}/invoices
+GET {{API_HOST}}/invoices?distributor=CMIG&year=2024&clientId=7204076116
 
 ### Cadastrar
 POST {{API_HOST}}/invoices
@@ -12,7 +12,7 @@ Content-Type: application/json
     "meterId": "3001116735"
   },
   "general": {
-    "date": "JAN/2024",
+    "date": "JAN/2023",
     "due": "12/02/2024",
     "distributor": "CMIG",
     "payment": 107.38
