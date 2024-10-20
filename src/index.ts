@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
-import { PrismaClient } from '@prisma/client'
+import {PrismaClient} from '@prisma/client';
 
 const server = fastify();
 server.register(cors, {});
@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 
 const dto = (invoice: any) => {
     return {
+        id: invoice.id,
         personal: {
             clientId: invoice.clientId,
             name: invoice.name,
@@ -49,10 +50,30 @@ const dto = (invoice: any) => {
 
 server.get('/invoices', async (request, reply) => {
 
-    const invoices = await prisma.invoice.findMany();
+    const {distributor, clientId, year} = request.query as Partial<{
+        distributor: string,
+        clientId: string,
+        year: string
+    }>;
 
-    console.log('invoices');
-    console.log(invoices);
+    const filters: Array<{ [key: string]: string | object }> = [];
+
+    if (distributor) {
+        filters.push({distributor: distributor})
+    }
+
+    if (clientId) {
+        filters.push({clientId: clientId})
+    }
+
+    // @todo: melhorar implementação da estrutura de datas
+    if (year) {
+        filters.push({date: {contains: year}})
+    }
+
+    const invoices = await prisma.invoice.findMany({
+        where: {AND: filters}
+    });
 
     reply.send(invoices.map(invoice => dto(invoice)));
 
@@ -60,18 +81,45 @@ server.get('/invoices', async (request, reply) => {
 
 server.get('/filters', async () => {
 
-    // mock
-    return {
-        years: [2018, 2019, 2020, 2021, 2022, 2023, 2024]
-    }
+    const invoices = await prisma.invoice.findMany({
+        distinct: ['name', 'clientId', 'distributor', 'date'],
+        select: {
+            name: true,
+            clientId: true,
+            distributor: true,
+            date: true,
+        },
+    });
 
+    return invoices.reduce((acc: any, item: any) => {
+
+        if (item.clientId && !acc.consumers.some((consumer: any) => consumer.id === item.clientId)) {
+            acc.consumers.push({
+                id: item.clientId,
+                name: item.name,
+            });
+        }
+
+        if (item.distributor && !acc.distributors.includes(item.distributor)) {
+            acc.distributors.push(item.distributor);
+        }
+
+        const [, year] = item.date.split('/');
+
+        if (year && !acc.years.includes(year)) {
+            acc.years.push(year);
+        }
+
+        return acc;
+    }, { consumers: [], distributors: [], years: [] });
 });
 
 server.post('/invoices', async (request, reply) => {
 
     const data = request.body as any;
 
-    const invoice = await prisma.invoice.create({ data: {
+    const invoice = await prisma.invoice.create({
+        data: {
             clientId: data.personal.clientId,
             name: data.personal.name,
             meterId: data.personal.meterId,
@@ -88,17 +136,18 @@ server.post('/invoices', async (request, reply) => {
             sceeValue: data.scee.value,
             sceeTax: data.scee.tax,
             compensatedQuantity: data.compensatedEnergy.quantity,
-            compensatedPriceUnit:data.compensatedEnergy.priceUnit,
-            compensatedValue:data.compensatedEnergy.value,
+            compensatedPriceUnit: data.compensatedEnergy.priceUnit,
+            compensatedValue: data.compensatedEnergy.value,
             compensatedTax: data.compensatedEnergy.tax,
             publicEnergyValue: data.publicEnergy.value,
             totalValue: data.total.value,
-        } });
+        }
+    });
 
     return dto(invoice);
 });
 
-server.listen({ port: 8080 }, (err, address) => {
+server.listen({port: 8080}, (err, address) => {
     if (err) {
         console.error(err)
         process.exit(1)
