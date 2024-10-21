@@ -4,7 +4,7 @@ import {getData} from "../src/lib";
 const pdf = require('pdf-parse');
 
 // path das faturas
-const invoicesPath = '/home/ale/Archive/Develop/test-lumi/Develop/boletos-api/playground/faturas';
+const invoicesPath = '/home/ale/Archive/Develop/test-lumi/Develop/boletos-api/faturas';
 
 // carregas itens do diretório
 const files = readdirSync(invoicesPath);
@@ -44,8 +44,8 @@ const pdftoText = async (_buffer: Buffer): Promise<string> => {
             // move para processados
             renameSync(path, `${invoicesPath}/processed/${file}`);
 
-            // // persiste resultado
-            // writeFileSync(path.replace('.pdf', '.json'), JSON.stringify(data, null, 2), { encoding: 'utf-8' });
+            // persiste resultado
+            writeFileSync(path.replace('.pdf', '.json'), JSON.stringify(data, null, 2), { encoding: 'utf-8' });
 
             resolve(data);
         }));
@@ -54,7 +54,7 @@ const pdftoText = async (_buffer: Buffer): Promise<string> => {
     const list = await Promise.all(promises);
 
     // persiste resultado
-    writeFileSync(`${invoicesPath}/out.json`, JSON.stringify(list, null, 2), { encoding: 'utf-8' });
+    // writeFileSync(`${invoicesPath}/out.json`, JSON.stringify(list, null, 2), { encoding: 'utf-8' });
 
     console.log(list);
 

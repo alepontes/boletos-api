@@ -26,10 +26,15 @@ const pdftoText = async (_buffer: any) => {
  *
  */
 const extractPersonalInformation = (text: string) => {
+    const regexNome = new RegExp(/(.*)\n(.*)\nFUNCIONARIOS/);
     const regex = new RegExp(/\s+Nº DO CLIENTE\s+Nº DA INSTALAÇÃO\s+(\d+)\s+(\d+)/, 'g');
+
+    // @todo ajustar recuperação do nome da fatura
+    const [, name] = regexNome.exec(text) || [];
     const [, clientId, meterId] = regex.exec(text) || [];
 
     return {
+        name: 'Lorem Ipsum',
         clientId,
         meterId,
     }
