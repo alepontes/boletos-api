@@ -20,6 +20,8 @@ const pdftoText = async (_buffer: Buffer): Promise<string> => {
     });
 }
 
+
+
 (async () => {
 
     // lê os arquivos simultaneamente
@@ -36,11 +38,14 @@ const pdftoText = async (_buffer: Buffer): Promise<string> => {
             // converte PDF em Texto
             const text = await pdftoText(_buffer);
 
+            // console.log('text');
+            // console.log(text);
+
             // recupera dados do PDF
             const data = await getData(text);
 
             // move para processados
-            renameSync(path, `${invoicesPath}/processed/${file}`);
+            // renameSync(path, `${invoicesPath}/processed/${file}`);
 
             // // persiste resultado
             // writeFileSync(path.replace('.pdf', '.json'), JSON.stringify(data, null, 2), { encoding: 'utf-8' });
