@@ -48,6 +48,7 @@ const extractGeneralInformation = (text: string) => {
         date,
         due,
         payment: parse(payment),
+        distributor: 'CEMIG',
     }
 
 }
