@@ -7,41 +7,40 @@ Content-Type: application/json
 
 {
   "personal": {
-    "name": "Lorem Ipsum",
+    "name": "JOSE MESALY FONSECA DE CARVALHO 52024156",
     "clientId": "7204076116",
     "meterId": "3001116735"
   },
   "general": {
-    "date": "JAN/2023",
-    "due": "12/02/2024",
-    "distributor": "CMIG",
-    "payment": 107.38
+    "date": "MAR/2022",
+    "due": "02/04/2022",
+    "payment": 109.48,
+    "distributor": "CEMIG"
   },
   "electricalEnergy": {
     "quantity": 50,
-    "priceUnit": 0.95543124,
-    "value": 47.75,
-    "tax": 0.74906000
+    "priceUnit": 0.95863974,
+    "value": 47.92,
+    "tax": 0.74906
   },
   "scee": {
-    "quantity": 456,
-    "priceUnit": 0.50970610,
-    "value": 232.42,
-    "tax": 0.48733000
+    "quantity": 504,
+    "priceUnit": 0.51141778,
+    "value": 257.74,
+    "tax": 0.48733
   },
   "compensatedEnergy": {
-    "quantity": 456,
-    "priceUnit": 0.48733000,
-    "value": -222.22,
-    "tax": 0.48733000
+    "quantity": 504,
+    "priceUnit": 0.48733,
+    "value": -245.61,
+    "tax": 0.48733
   },
   "publicEnergy": {
     "value": 49.43
   },
   "total": {
-    "value": 107.38
+    "value": 109.48
   }
 }
-
 ### Dashboard
 GET {{API_HOST}}/dashboard
