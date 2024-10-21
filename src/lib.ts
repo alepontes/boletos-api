@@ -3,6 +3,14 @@ import pdf from 'pdf-parse';
 import fs from 'fs';
 
 
+const parse = (value: string) => {
+    const formattedValue = value
+        .replace(/\./g, '')
+        .replace(',', '.');
+
+    return parseFloat(formattedValue);
+}
+
 /**
  * Converte um PDF em Texto
  */
@@ -39,7 +47,7 @@ const extractGeneralInformation = (text: string) => {
     return {
         date,
         due,
-        payment,
+        payment: parse(payment),
     }
 
 }
@@ -54,10 +62,10 @@ const extractElectricalEnergyInformation = (text: string) => {
     const [, quantity, priceUnit, value, tax] = regex.exec(text) || [];
 
     return {
-        quantity,
-        priceUnit,
-        value,
-        tax,
+        quantity: parse(quantity),
+        priceUnit: parse(priceUnit),
+        value: parse(value),
+        tax: parse(tax),
     }
 
 }
@@ -71,10 +79,10 @@ const extractSceeInformation = (text: string) => {
         const [, quantity, priceUnit, value, tax] = result1;
 
         return {
-            quantity,
-            priceUnit,
-            value,
-            tax,
+            quantity: parse(quantity),
+            priceUnit: parse(priceUnit),
+            value: parse(value),
+            tax: parse(tax),
         }
     }
 
@@ -83,10 +91,10 @@ const extractSceeInformation = (text: string) => {
         const [, quantity, priceUnit, value, , , , , , tax] = result2;
 
         return {
-            quantity,
-            priceUnit,
-            value,
-            tax,
+            quantity: parse(quantity),
+            priceUnit: parse(priceUnit),
+            value: parse(value),
+            tax: parse(tax),
         }
     }
 
@@ -100,10 +108,10 @@ const extractCompensatedEnergyInformation = (text: string) => {
     if (result1) {
         const [, quantity, priceUnit, value, tax] = result1;
         return {
-            quantity,
-            priceUnit,
-            value,
-            tax,
+            quantity: parse(quantity),
+            priceUnit: parse(priceUnit),
+            value: parse(value),
+            tax: parse(tax),
         }
     }
 
@@ -112,10 +120,10 @@ const extractCompensatedEnergyInformation = (text: string) => {
         const [, quantity, priceUnit, value, , , , , , tax] = result2;
 
         return {
-            quantity,
-            priceUnit,
-            value,
-            tax,
+            quantity: parse(quantity),
+            priceUnit: parse(priceUnit),
+            value: parse(value),
+            tax: parse(tax),
         }
     }
 
@@ -126,7 +134,7 @@ const extractPublicEnergyInformation = (text: string) => {
     const [, value] = regex.exec(text) || [];
 
     return {
-        value,
+        value: parse(value),
     }
 
 }
@@ -136,7 +144,7 @@ const extractTotalValue = (text: string) => {
     const [, value] = regex.exec(text) || [];
 
     return {
-        value,
+        value: parse(value),
     }
 }
 
