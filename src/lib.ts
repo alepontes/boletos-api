@@ -36,7 +36,7 @@ const extractGeneralInformation = (text: string) => {
     const regex = new RegExp(/\s+Referente a\s+Vencimento\s+Valor a pagar \(R\$\)\s+([A-Z]{3}\/\d{4})\s+(\d{2}\/\d{2}\/\d{4})\s+(\d+(,\d+)?)/, 'g');
     const [, date, due, payment] = regex.exec(text) || [];
 
-    return  {
+    return {
         date,
         due,
         payment,
@@ -63,26 +63,60 @@ const extractElectricalEnergyInformation = (text: string) => {
 }
 
 const extractSceeInformation = (text: string) => {
-    const regex = new RegExp(/Energia SCEE s\/ ICMSkWh\s+(\d+)\s+(\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(\d+(?:,\d+)?)/, 'g');
-    const [, quantity, priceUnit, value, tax] = regex.exec(text) || [];
+    const regex1 = new RegExp(/Energia SCEE s\/ ICMSkWh\s+(\d+)\s+(\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(\d+(?:,\d+)?)/, 'g');
+    const regex2 = new RegExp(/Energia SCEE s\/ ICMSkWh\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:,\d+)?)\s+(\d{1,3}(?:\.\d{3})*),(\d{2})\s+(-?\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)/, 'g');
 
-    return {
-        quantity,
-        priceUnit,
-        value,
-        tax,
+    const result1 = regex1.exec(text);
+    if (result1) {
+        const [, quantity, priceUnit, value, tax] = result1;
+
+        return {
+            quantity,
+            priceUnit,
+            value,
+            tax,
+        }
     }
+
+    const result2 = regex2.exec(text);
+    if (result2) {
+        const [, quantity, priceUnit, value, , , , , , tax] = result2;
+
+        return {
+            quantity,
+            priceUnit,
+            value,
+            tax,
+        }
+    }
+
 }
 
 const extractCompensatedEnergyInformation = (text: string) => {
-    const regex = new RegExp(/Energia compensada GD IkWh\s+(\d+)\s+(\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(\d+(?:,\d+)?)/, 'g');
-    const [, quantity, priceUnit, value, tax] = regex.exec(text) || [];
+    const regex1 = new RegExp(/Energia compensada GD IkWh\s+(\d+)\s+(\d+(?:,\d+)?)\s+(-?\d+(?:,\d+)?)\s+(\d+(?:,\d+)?)/, 'g');
+    const regex2 = new RegExp(/Energia compensada GD IkWh\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:.\d+)?)\s+((-)?(?:(\d{1,3}(?:\.\d{3})*)?)(?:,(\d{2}))?)\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:.\d+)?)\s+(-?\d+(?:.\d+)?)/, 'g');
 
-    return {
-        quantity,
-        priceUnit,
-        value,
-        tax,
+    const result1 = regex1.exec(text);
+    if (result1) {
+        const [, quantity, priceUnit, value, tax] = result1;
+        return {
+            quantity,
+            priceUnit,
+            value,
+            tax,
+        }
+    }
+
+    const result2 = regex2.exec(text);
+    if (result2) {
+        const [, quantity, priceUnit, value, , , , , , tax] = result2;
+
+        return {
+            quantity,
+            priceUnit,
+            value,
+            tax,
+        }
     }
 
 }
