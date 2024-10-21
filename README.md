@@ -10,7 +10,7 @@
 - Complie o projeto: `npm run build`
 - Rodar o projeto: `npm run dev`
 - Rode o Docker do Postgres `docker compose up -d`
-- Rode o comando `npx prisma migrate dev`
+- Rode o comando `npx prisma migrate dev` (pular caso estiver utilizando a image alepontes/boletos-db:1)
 - Rode o extrator: `npm run load-invoices`. O resultado deve ser parecido com esse:
 - ![img_1.png](img_1.png)
 
